@@ -67,7 +67,7 @@ class Stock:
 			if self.new[i][0] != self.old[i][0]:
 				for j in range(4, -1, -1):
 					if self.old[j][0] == self.new[i][0] and j != i:
-						if self.old[j][1] != 9:
+						if self.old[j][1] != 0:
 							for t in self.new:
 								if t[0] == self.old[j-1][0]:
 									price = t[1]
