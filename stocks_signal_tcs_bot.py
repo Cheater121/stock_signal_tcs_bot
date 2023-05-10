@@ -42,7 +42,7 @@ def start_handler(message):
 		for stock in stocks:
 			stock.get_new_prices()
 			stock.sort_with_notification()
-		sleep(30)
+		sleep(5*60)
 
 @bot.message_handler(commands=['stop'])
 def stop_handler(message):
@@ -70,8 +70,11 @@ class Stock:
 							for t in self.new:
 								if t[0] == self.old[j-1][0]:
 									price = t[1]
-							print(f"{self.ticker} {self.old[j][0]} пробило вниз {self.old[j-1][0]}")
-							bot.send_message(bot.chat_id, f"{self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.)")
+							print(f"{self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.)")
+							if self.old[j][0] and self.old[j-1][0] != "price":
+								bot.send_message(bot.chat_id, f"\U0000203C {self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.) \U0000203C")
+							else:
+								bot.send_message(bot.chat_id, f"{self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.)")								
 						self.old[j], self.old[j-1] = self.old[j-1], self.old[j]
 		self.old = self.new
 	
