@@ -68,7 +68,7 @@ class Stock:
 					if self.old[j][0] == self.new[i][0] and j != i:
 						if self.old[j][1] != 0:
 							print(f"{self.ticker} {self.old[j][0]} пробило вниз {self.old[j-1][0]}")
-							bot.send_message(bot.chat_id, f"{self.ticker} {self.old[j][0]} пробило вниз {self.old[j-1][0]}")
+							bot.send_message(bot.chat_id, f"{self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({self.old[j-1][1]} руб.)")
 						self.old[j], self.old[j-1] = self.old[j-1], self.old[j]
 		self.old = self.new
 	
