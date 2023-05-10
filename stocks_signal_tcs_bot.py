@@ -1,4 +1,5 @@
 import telebot
+from telebot import types
 from datetime import timedelta
 from time import sleep
 
@@ -66,15 +67,18 @@ class Stock:
 			if self.new[i][0] != self.old[i][0]:
 				for j in range(4, -1, -1):
 					if self.old[j][0] == self.new[i][0] and j != i:
-						if self.old[j][1] != 0:
+						if self.old[j][1] != 9:
 							for t in self.new:
 								if t[0] == self.old[j-1][0]:
 									price = t[1]
 							print(f"{self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.)")
 							if self.old[j][0] and self.old[j-1][0] != "price":
-								bot.send_message(bot.chat_id, f"\U0000203C {self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.) \U0000203C")
+								bot.keyboard1 = types.InlineKeyboardMarkup()
+								url_btn = types.InlineKeyboardButton(text=f"{self.ticker}", url=f"https://www.tinkoff.ru/invest/stocks/{self.ticker}")
+								bot.keyboard1.add(url_btn)
+								bot.send_message(bot.chat_id, f"\U0000203C {self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.) \U0000203C", reply_markup=bot.keyboard1)
 							else:
-								bot.send_message(bot.chat_id, f"{self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.)")								
+								bot.send_message(bot.chat_id, f"{self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.)", reply_markup=bot.keyboard1)								
 						self.old[j], self.old[j-1] = self.old[j-1], self.old[j]
 		self.old = self.new
 	
