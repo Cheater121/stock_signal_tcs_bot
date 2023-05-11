@@ -20,7 +20,7 @@ bot.update_switcher = True
 
 @bot.message_handler(commands=['start'])
 def start_handler(message):
-	bot.send_message(message.chat.id, "Hello! Prepare for spam. To stop it use '/stop' command. And '/help' for all cimmands.")
+	bot.send_message(message.chat.id, "Hello! Prepare for spam. To stop it use '/stop' command. And '/help' for all commands.")
 	bot.chat_id = message.chat.id
 	ozon = Stock("BBG00Y91R9T3", "OZON")
 	sber = Stock("BBG004730N88", "SBER")
