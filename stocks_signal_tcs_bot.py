@@ -15,9 +15,12 @@ TG_TOKEN = tokens.TG_TOKEN
 
 
 bot = telebot.TeleBot(TG_TOKEN)
+
+bot.update_switcher = True
+
 @bot.message_handler(commands=['start'])
 def start_handler(message):
-	bot.send_message(message.chat.id, "Hello! Prepare for spam. To stop it use '/stop' command.")
+	bot.send_message(message.chat.id, "Hello! Prepare for spam. To stop it use '/stop' command. And '/help' for all cimmands.")
 	bot.chat_id = message.chat.id
 	ozon = Stock("BBG00Y91R9T3", "OZON")
 	sber = Stock("BBG004730N88", "SBER")
@@ -39,7 +42,7 @@ def start_handler(message):
 	gazp = Stock("BBG004730RP0", "GAZP")
 	lkoh = Stock("BBG004731032", "LKOH")
 	stocks = [ozon, sber, sgzh, poly, vkco, tatn, nvtk, spbe, nlmk, pikk, five, afks, yndx, rosn, alrs, gmkn, aflt, gazp, lkoh]
-	while True:
+	while bot.update_switcher is True:
 		for stock in stocks:
 			stock.get_new_prices()
 			stock.sort_with_notification()
@@ -48,7 +51,22 @@ def start_handler(message):
 @bot.message_handler(commands=['stop'])
 def stop_handler(message):
 	bot.send_message(message.chat.id, "Bye bye!")
-	bot.stop_polling()
+	bot.update_switcher = False
+	
+@bot.message_handler(commands=['status'])
+def status_checker(message):
+	bot.reply_to(message, "I' fine, thanks!")
+
+@bot.message_handler(commands=['letsgo'])
+def restart_handler(message):
+	bot.update_switcher = True
+	bot.send_message(message.chat.id, "To the moon!")
+
+@bot.message_handler(commands=['help'])
+def help_handler(message):
+	bot.update_switcher = True
+	bot.send_message(message.chat.id, "I have commands: '/start', '/stop', '/status', '/letsgo'")
+
 
 
 class Stock:
