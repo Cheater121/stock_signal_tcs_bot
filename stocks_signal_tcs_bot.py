@@ -46,7 +46,7 @@ def start_handler(message):
 		for stock in stocks:
 			stock.get_new_prices()
 			stock.sort_with_notification()
-		sleep(5*60)
+		sleep(60*60)
 
 @bot.message_handler(commands=['stop'])
 def stop_handler(message):
