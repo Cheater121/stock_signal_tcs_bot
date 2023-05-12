@@ -93,7 +93,7 @@ class Stock:
 							bot.keyboard1 = types.InlineKeyboardMarkup()
 							url_btn = types.InlineKeyboardButton(text=f"{self.ticker}", url=f"https://www.tinkoff.ru/invest/stocks/{self.ticker}")
 							bot.keyboard1.add(url_btn)
-							if (self.old[j][0] or self.old[j-1][0]) == "price":
+							if self.old[j][0] == "price" or self.old[j-1][0] == "price":
 								bot.send_message(bot.chat_id, f"{self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.)", reply_markup=bot.keyboard1)
 							else:
 								bot.send_message(bot.chat_id, f"\U0000203C {self.ticker} {self.old[j][0]} ({self.new[i][1]} руб.) пробило вниз {self.old[j-1][0]} ({price} руб.) \U0000203C", reply_markup=bot.keyboard1)								
@@ -124,3 +124,4 @@ if __name__ == "__main__":
 	print("start")
 	bot.polling()
 	print("finished")
+
