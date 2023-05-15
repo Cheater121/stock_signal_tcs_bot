@@ -22,6 +22,7 @@ bot.update_switcher = True
 def start_handler(message):
 	bot.send_message(message.chat.id, "Hello! Prepare for spam. To stop it use '/stop' command. And '/help' for all commands.")
 	bot.chat_id = message.chat.id
+	bot.update_switcher = True
 	ozon = Stock("BBG00Y91R9T3", "OZON")
 	sber = Stock("BBG004730N88", "SBER")
 	sgzh = Stock("BBG0100R9963", "SGZH")
@@ -41,7 +42,8 @@ def start_handler(message):
 	aflt = Stock("BBG004S683W7", "AFLT")
 	gazp = Stock("BBG004730RP0", "GAZP")
 	lkoh = Stock("BBG004731032", "LKOH")
-	stocks = [ozon, sber, sgzh, poly, vkco, tatn, nvtk, spbe, nlmk, pikk, five, afks, yndx, rosn, alrs, gmkn, aflt, gazp, lkoh]
+	moex = Stock("BBG004730JJ5", "MOEX")
+	stocks = [ozon, sber, sgzh, poly, vkco, tatn, nvtk, spbe, nlmk, pikk, five, afks, yndx, rosn, alrs, gmkn, aflt, gazp, lkoh, moex]
 	while bot.update_switcher is True:
 		for stock in stocks:
 			stock.get_new_prices()
@@ -50,22 +52,25 @@ def start_handler(message):
 
 @bot.message_handler(commands=['stop'])
 def stop_handler(message):
-	bot.send_message(message.chat.id, "Bye bye!")
+	bot.send_message(message.chat.id, "Bye bye! To start use '/start'.")
 	bot.update_switcher = False
 	
 @bot.message_handler(commands=['status'])
 def status_checker(message):
-	bot.reply_to(message, "I' fine, thanks!")
+	if bot.update_switcher is True:
+		on_off = "on"
+	else:
+		on_off = "off"
+	bot.reply_to(message, f"I'm fine, thanks! Update swithcer is {on_off}")
 
-@bot.message_handler(commands=['letsgo'])
-def restart_handler(message):
-	bot.update_switcher = True
-	bot.send_message(message.chat.id, "To the moon!")
+@bot.message_handler(commands=['stocks'])
+def stock_handler(message):
+	bot.send_message(message.chat.id, "OZON, SBER, SGZH, POLY, VKCO, TATN, NVTK, SPBE, NLMK, PIKK, FIVE, AFKS, YNDX, ROSN, ALRS, GMKN, AFLT, GAZP, LKOH, MOEX")
 
 @bot.message_handler(commands=['help'])
 def help_handler(message):
 	bot.update_switcher = True
-	bot.send_message(message.chat.id, "I have commands: '/start', '/stop', '/status', '/letsgo'")
+	bot.send_message(message.chat.id, "I have commands: '/start', '/stop', '/status', '/stocks'.")
 
 
 
