@@ -12,8 +12,8 @@ from tinkoff.invest.utils import now
 
 dotenv.load_dotenv()
 
-TCS_TOKEN = os.environ["TCS_TOKEN"]
-TG_TOKEN = os.environ["'TG_TOKEN'"]
+TCS_TOKEN = os.getenv("TCS_TOKEN")
+TG_TOKEN = os.getenv('TG_TOKEN')
 
 
 bot = telebot.TeleBot(TG_TOKEN)
