@@ -1,22 +1,23 @@
+import os
+import dotenv
 import telebot
+
 from telebot import types
 from datetime import timedelta
 from time import sleep
 
-import tokens
 from tinkoff.invest import CandleInterval, Client
 from tinkoff.invest.utils import now
 
-#import os
-#TCS_TOKEN = os.environ["INVEST_TOKEN"]
-#TG_TOKEN = os.environ["'TELEGRAM_BOT_TOKEN'"]
-TCS_TOKEN = tokens.TCS_TOKEN
-TG_TOKEN = tokens.TG_TOKEN
+
+dotenv.load_dotenv()
+
+TCS_TOKEN = os.environ["TCS_TOKEN"]
+TG_TOKEN = os.environ["'TG_TOKEN'"]
 
 
 bot = telebot.TeleBot(TG_TOKEN)
 
-bot.update_switcher = True
 
 @bot.message_handler(commands=['start'])
 def start_handler(message):
@@ -69,7 +70,6 @@ def stock_handler(message):
 
 @bot.message_handler(commands=['help'])
 def help_handler(message):
-	bot.update_switcher = True
 	bot.send_message(message.chat.id, "I have commands: '/start', '/stop', '/status', '/stocks'.")
 
 
@@ -79,7 +79,7 @@ class Stock:
 	new = [('price', 5), ('ma20', 10), ('ma50', 1), ('ma100', 3), ('ma200', 2)]
 	
 	
-	def __init__(self, figi, ticker):
+	def __init__(self, figi: str, ticker: str):
 		self.figi = figi
 		self.ticker = ticker
 	
