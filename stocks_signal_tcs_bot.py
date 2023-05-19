@@ -90,8 +90,8 @@ def help_handler(message):
 
                 
 class Stock:
-    old = [('price', 0), ('ma20', 0), ('ma50', 0), ('ma100', 0), ('ma200', 0)]
-    new = [('price', 5), ('ma20', 10), ('ma50', 1), ('ma100', 3), ('ma200', 2)]
+    old = [('price', 0), ('ma20', 0), ('ma50', 0), ('ma100', 0), ('ma200', 0), ('seven_day_low', 0), ('seven_day_high', 0), ('month_low', 0), ('month_high', 0), ('prev_day_low', 0), ('prev_day_high', 0)]
+    new = [('price', 5), ('ma20', 10), ('ma50', 1), ('ma100', 3), ('ma200', 2), ('seven_day_low', 0), ('seven_day_high', 0), ('month_low', 0), ('month_high', 0), ('prev_day_low', 0), ('prev_day_high', 0)]
     
     
     def __init__(self, figi: str, ticker: str):
@@ -127,20 +127,37 @@ class Stock:
        try:
            with Client(TCS_TOKEN) as client:
                ma20, ma50, ma100, ma200, counter = 0, 0, 0, 0, 0
+               seven_day_low = 10**9
+               month_low = 10**9
+               seven_day_high = -1
+               month_high = -1
                for candle in client.get_all_candles(figi=self.figi, from_=now() - timedelta(days=200), interval=CandleInterval.CANDLE_INTERVAL_DAY):
                    counter += 1
                    #print(candle, "\n")
                    close_price = candle.close.units + candle.close.nano/(10**9)
                    if counter > 0:
                        ma200 += close_price
+                       if candle.is_complete is True:
+                           prev_day_low = candle.low.units + candle.low.nano/(10**9)
+                           prev_day_high = candle.high.units + candle.high.nano/(10**9)
                    if counter > 100:
                        ma100 += close_price
                    if counter > 150:
                        ma50 += close_price
                    if counter > 180:
                        ma20 += close_price
-               print(counter, f'{self.ticker} MA20 = {ma20/(counter-180)}', f'MA50 = {ma50/(counter-150)}', f'MA100 = {ma100/(counter-100)}', f'MA200 = {ma200/counter}', f'Price = {close_price}')
-               self.new = [('ma20', round(ma20/(counter-180)), 2), ('ma50', round(ma50/(counter-150)), 2), ('ma100', round(ma100/(counter-100)), 2), ('ma200', round(ma200/counter), 2), ('price', close_price)]
+                   if counter > 170:
+                       if candle.low.units + candle.low.nano/(10**9) < month_low:
+                           month_low = candle.low.units + candle.low.nano/(10**9)
+                       if candle.high.units + candle.high.nano/(10**9) > month_high:
+                           month_high = candle.high.units + candle.high.nano/(10**9)
+                   if counter > 193:
+                       if candle.low.units + candle.low.nano/(10**9) < seven_day_low:
+                           seven_day_low = candle.low.units + candle.low.nano/(10**9)
+                       if candle.high.units + candle.high.nano/(10**9 > seven_day_high):
+                           seven_day_high = candle.high.units + candle.high.nano/(10**9)
+               print(counter, f'{self.ticker} MA20 = {ma20/(counter-180)}', f'MA50 = {ma50/(counter-150)}', f'MA100 = {ma100/(counter-100)}', f'MA200 = {ma200/counter}', f'Price = {close_price}', f'Previous day low = {prev_day_low}', f'Seven day low = {seven_day_low}', f'Month low = {month_low}', f'Previous day high = {prev_day_high}', f'Seven day high = {seven_day_high}', f'Month high = {month_high}')
+               self.new = [('ma20', round(ma20/(counter-180), 2)), ('ma50', round(ma50/(counter-150), 2)), ('ma100', round(ma100/(counter-100), 2)), ('ma200', round(ma200/counter, 2)), ('price', close_price), ('seven_day_low', seven_day_low), ('seven_day_high', seven_day_high), ('month_low', month_low), ('month_high', month_high), ('prev_day_low', prev_day_low), ('prev_day_high', prev_day_high)]
                #print(self.new)
        except Exception as e:
             logger.exception(f"Exeption in get prices method: \n{e}\n")
