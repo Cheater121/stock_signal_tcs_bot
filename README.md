@@ -8,9 +8,9 @@ This is MVP for my friend.
 
 
 
-This project is a stock price tracker that uses the Tinkoff API and the Telegram Bot API to provide real-time updates on stock prices and send notifications when certain price thresholds are met.
+This project is a stock price tracker that uses the Tinkoff API and the Telegram Bot API to provide real-time updates (once per hour by default) on stock prices and send notifications when certain price thresholds are met.
 
-Moving Average: 20-50-100-200 days. High/low: 1-7-30 days.
+Tracked Indicators: Moving Average: 20-50-100-200 days; High/low interval: 1-7-30 days.
 
 
 ## Table of Contents
@@ -86,4 +86,4 @@ Contributions are welcome! If you have any suggestions, bug reports, or feature 
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-Feel free to customize and modify the README.md according to your project's specific details and requirements.
+
