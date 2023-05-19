@@ -36,7 +36,7 @@ Moving Average: 20-50-100-200 days. High/low: 1-7-30 days.
 1. Clone the repository:
 
    ```
-   git clone https://github.com/your-username/stock-price-tracker.git
+   git clone https://github.com/Cheater121/stock_signal_tcs_bot.git
    ```
 
 2. Install the required dependencies:
