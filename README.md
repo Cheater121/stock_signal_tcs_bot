@@ -54,7 +54,7 @@ Moving Average: 20-50-100-200 days. High/low: 1-7-30 days.
 
 ## Usage
 
-1. Start the bot by running the `main.py` script:
+1. Start the bot by running the `stock_signal_tcs_bot.py` script:
 
    ```
    python stock_signal_tcs_bot.py
