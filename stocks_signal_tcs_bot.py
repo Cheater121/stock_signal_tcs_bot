@@ -18,7 +18,7 @@ TG_TOKEN = os.getenv('TG_TOKEN')
 
 
 bot = telebot.TeleBot(TG_TOKEN)
-
+bot.update_switcher = True
 
 @bot.message_handler(commands=['start'])
 def start_handler(message):
