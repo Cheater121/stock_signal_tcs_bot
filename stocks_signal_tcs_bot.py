@@ -39,10 +39,10 @@ def sort_with_notification(stock):
                 bot.keyboard1.add(url_btn)
                 if old.get(name) > old.get(target) and new.get(name) < new.get(target):
                     print(f'{name} ({new.get(name)} rub.) vniz {target} ({new.get(target)} rub.)')
-                    bot.send_message(bot.chat_id, f"{attention}{stock.ticker} <b>{name}</b> ({new.get(name)} руб.) breakdown support <b>{target}</b> ({new.get(target)} руб.) \U0001F534{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
+                    bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>{name}</b> ({new.get(name)} руб.) breakdown support <b>{target}</b> ({new.get(target)} руб.) \U0001F534{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
                 if old.get(name) < old.get(target) and new.get(name) > new.get(target):
                     print(f'{name} ({new.get(name)} rub.) vverh {target} ({new.get(target)} rub.)')
-                    bot.send_message(bot.chat_id, f"{attention}{stock.ticker} <b>{name}</b> ({new.get(name)} руб.) break upward resistance <b>{target}</b> ({new.get(target)} руб.){attention} \U0001F7E2", parse_mode="HTML", reply_markup=bot.keyboard1)
+                    bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>{name}</b> ({new.get(name)} руб.) break upward resistance <b>{target}</b> ({new.get(target)} руб.){attention} \U0001F7E2", parse_mode="HTML", reply_markup=bot.keyboard1)
         stock.old = stock.new
     except Exception as e:
         logger.exception(f"Exeption in sort method: \n{e}\n")
