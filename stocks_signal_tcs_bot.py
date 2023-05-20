@@ -28,7 +28,7 @@ def sort_with_notification(stock):
         attention = ""
         old = stock.old
         new = stock.new
-        priority_list = ['PRICE', 'MA20', 'MA50', 'MA100', 'MA200', 'PREV_DAY_LOW', 'PREV_DAY_HIGH', 'SEVEN_DAY_LOW', 'SEVEN_DAY_HIGH', 'MONTH_LOW', 'MONTH_HIGH']
+        priority_list = ['PRICE', 'MA20', 'MA50', 'MA100', 'MA200', 'YESTERDAY_LOW', 'YESTERDAY_HIGH', 'WEEK_LOW', 'WEEK_HIGH', 'MONTH_LOW', 'MONTH_HIGH']
         for i in range(len(priority_list)):
             name = priority_list[i]
             if name != 'PRICE':
