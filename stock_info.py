@@ -13,8 +13,8 @@ TCS_TOKEN = os.getenv("TCS_TOKEN")
 
 
 class Stock:
-    old = [('PRICE', 0), ('MA20', 0), ('MA50', 0), ('MA100', 0), ('MA200', 0), ('SEVEN_DAY_LOW', 0), ('SEVEN_DAY_HIGH', 0), ('MONTH_LOW', 0), ('MONTH_HIGH', 0), ('PREV_DAY_LOW', 0), ('PREV_DAY_HIGH', 0)]
-    new = [('PRICE', 5), ('MA20', 10), ('MA50', 1), ('MA100', 3), ('MA200', 2), ('SEVEN_DAY_LOW', 0), ('SEVEN_DAY_HIGH', 0), ('MONTH_LOW', 0), ('MONTH_HIGH', 0), ('PREV_DAY_LOW', 0), ('PREV_DAY_HIGH', 0)]
+    old = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'PREV_DAY_LOW': 0, 'PREV_DAY_HIGH': 0, 'SEVEN_DAY_LOW': 0, 'SEVEN_DAY_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
+    new = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'PREV_DAY_LOW': 0, 'PREV_DAY_HIGH': 0, 'SEVEN_DAY_LOW': 0, 'SEVEN_DAY_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
     
     
     def __init__(self, figi: str, ticker: str):
@@ -55,7 +55,7 @@ class Stock:
                        if candle.high.units + candle.high.nano/(10**9 > seven_day_high):
                            seven_day_high = candle.high.units + candle.high.nano/(10**9)
                print(counter, f'{self.ticker} MA20 = {ma20/(counter-180)}', f'MA50 = {ma50/(counter-150)}', f'MA100 = {ma100/(counter-100)}', f'MA200 = {ma200/counter}', f'Price = {close_price}', f'Previous day low = {prev_day_low}', f'Seven day low = {seven_day_low}', f'Month low = {month_low}', f'Previous day high = {prev_day_high}', f'Seven day high = {seven_day_high}', f'Month high = {month_high}')
-               self.new = [('MA20', round(ma20/(counter-180), 2)), ('MA50', round(ma50/(counter-150), 2)), ('MA100', round(ma100/(counter-100), 2)), ('MA200', round(ma200/counter, 2)), ('PRICE', close_price), ('SEVEN_DAY_LOW', seven_day_low), ('SEVEN_DAY_HIGH', seven_day_high), ('MONTH_LOW', month_low), ('MONTH_HIGH', month_high), ('PREV_DAY_LOW', prev_day_low), ('PREV_DAY_HIGH', prev_day_high)]
+               self.new = {'MA20': round(ma20/(counter-180), 2), 'MA50': round(ma50/(counter-150), 2), 'MA100': round(ma100/(counter-100), 2), 'MA200': round(ma200/counter, 2), 'PRICE': close_price, 'SEVEN_DAY_LOW': seven_day_low, 'SEVEN_DAY_HIGH': seven_day_high, 'MONTH_LOW': month_low, 'MONTH_HIGH': month_high, 'PREV_DAY_LOW': prev_day_low, 'PREV_DAY_HIGH': prev_day_high}
                #print(self.new)
        except Exception as e:
             logger.exception(f"Exeption in get prices method: \n{e}\n")
