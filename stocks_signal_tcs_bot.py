@@ -1,3 +1,11 @@
+'''ToDo: 
+- separate stock class with business logic
+- move the list of monitored stocks to a separate file 
+- add the ability to search for an instrument by ticker 
+- add the ability to edit (add/remove) the list of tracked instruments 
+- make a system of priorities for indicators (where something breaks through)
+'''
+
 import os
 import dotenv
 import telebot
