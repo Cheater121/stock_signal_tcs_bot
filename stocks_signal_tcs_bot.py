@@ -48,7 +48,7 @@ def sort_with_notification(stock):
         logger.exception(f"Exeption in sort method: \n{e}\n")
     
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start'], chat_types=['supergroup'], is_chat_admin=True)
 def start_handler(message):
     try:
         bot.send_message(message.chat.id, "Hello! Prepare for spam. To stop it use '/stop' command. And '/help' for all commands.")
@@ -62,7 +62,7 @@ def start_handler(message):
     except Exception as e:
         logger.exception(f"Exeption in start handler: \n{e}\n")
 
-@bot.message_handler(commands=['stop'])
+@bot.message_handler(commands=['stop'], chat_types=['supergroup'], is_chat_admin=True)
 def stop_handler(message):
     try:
         bot.send_message(message.chat.id, "Bye bye! To start use '/start'.")
@@ -70,7 +70,7 @@ def stop_handler(message):
     except Exception as e:
         logger.exception(f"Exeption in stop handler: \n{e}\n")
     
-@bot.message_handler(commands=['status'])
+@bot.message_handler(commands=['status'], chat_types=['supergroup'], is_chat_admin=True)
 def status_checker(message):
     try:
         if bot.update_switcher is True:
@@ -88,7 +88,7 @@ def stock_handler(message):
     except Exception as e:
         logger.exception(f"Exeption in stock handler: \n{e}\n")
 
-@bot.message_handler(commands=['help'])
+@bot.message_handler(commands=['help'], chat_types=['supergroup'], is_chat_admin=True)
 def help_handler(message):
     try:
         bot.send_message(message.chat.id, "I have commands: '/start', '/stop', '/status', '/stocks'.")
