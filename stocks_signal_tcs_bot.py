@@ -1,13 +1,14 @@
 '''ToDo: 
 - add the ability to search for an instrument by ticker 
 - add the ability to edit (add/remove) the list of tracked instruments 
+- add work with database
 '''
 
 import os
 import dotenv
 import telebot
 
-from telebot import types
+from telebot import types, custom_filters
 from time import sleep
 from stock_info import stocks_list
 from setup_logger import logger
@@ -48,7 +49,7 @@ def sort_with_notification(stock):
         logger.exception(f"Exeption in sort method: \n{e}\n")
     
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(is_chat_admin=True, commands=['start'])
 def start_handler(message):
     try:
         bot.send_message(message.chat.id, "Hello! Prepare for spam. To stop it use '/stop' command. And '/help' for all commands.")
@@ -62,7 +63,7 @@ def start_handler(message):
     except Exception as e:
         logger.exception(f"Exeption in start handler: \n{e}\n")
 
-@bot.message_handler(commands=['stop'])
+@bot.message_handler(is_chat_admin=True, commands=['stop'])
 def stop_handler(message):
     try:
         bot.send_message(message.chat.id, "Bye bye! To start use '/start'.")
@@ -70,7 +71,7 @@ def stop_handler(message):
     except Exception as e:
         logger.exception(f"Exeption in stop handler: \n{e}\n")
     
-@bot.message_handler(commands=['status'])
+@bot.message_handler(is_chat_admin=True, commands=['status'])
 def status_checker(message):
     try:
         if bot.update_switcher is True:
@@ -91,7 +92,7 @@ def stock_handler(message):
 @bot.message_handler(commands=['help'])
 def help_handler(message):
     try:
-        bot.send_message(message.chat.id, "I have commands: '/start', '/stop', '/status', '/stocks'.")
+        bot.send_message(message.chat.id, "I have commands: '/start' (for admins), '/stop' (for admins), '/status' (for admins), '/stocks' (for all members) - send tracked stocks list.")
     except Exception as e:
         logger.exception(f"Exeption in help handler: \n{e}\n")
 
@@ -99,6 +100,7 @@ def help_handler(message):
 
 if __name__ == "__main__":
     print("start")
+    bot.add_custom_filter(custom_filters.IsAdminFilter(bot))
     bot.polling()
     print("finished")
 
