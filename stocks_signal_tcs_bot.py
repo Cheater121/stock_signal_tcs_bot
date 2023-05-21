@@ -8,10 +8,12 @@ import os
 import dotenv
 import telebot
 
-from telebot import types, custom_filters
+from telebot import custom_filters
 from time import sleep
+
 from stock_info import stocks_list
 from setup_logger import logger
+from strategies import levels_with_notification
 
 
 
@@ -24,31 +26,6 @@ bot = telebot.TeleBot(TG_TOKEN)
 bot.update_switcher = True
 
 
-def sort_with_notification(stock):
-    try:
-        attention = ""
-        old = stock.old
-        new = stock.new
-        priority_list = ['PRICE', 'MA20', 'MA50', 'MA100', 'MA200', 'YESTERDAY_LOW', 'YESTERDAY_HIGH', 'WEEK_LOW', 'WEEK_HIGH', 'MONTH_LOW', 'MONTH_HIGH']
-        for i in range(len(priority_list)):
-            name = priority_list[i]
-            if name != 'PRICE':
-                attention = '\U0000203C'
-            for target in priority_list[i+1::]:
-                bot.keyboard1 = types.InlineKeyboardMarkup()
-                url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}", url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
-                bot.keyboard1.add(url_btn)
-                if old.get(name) > old.get(target) and new.get(name) < new.get(target):
-                    print(f'{name} ({new.get(name)} rub.) vniz {target} ({new.get(target)} rub.)')
-                    bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>{name}</b> ({new.get(name)} руб.) breakdown support <b>{target}</b> ({new.get(target)} руб.) \U0001F534{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
-                if old.get(name) < old.get(target) and new.get(name) > new.get(target):
-                    print(f'{name} ({new.get(name)} rub.) vverh {target} ({new.get(target)} rub.)')
-                    bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>{name}</b> ({new.get(name)} руб.) break upward resistance <b>{target}</b> ({new.get(target)} руб.){attention} \U0001F7E2", parse_mode="HTML", reply_markup=bot.keyboard1)
-        stock.old = stock.new
-    except Exception as e:
-        logger.exception(f"Exeption in sort method: \n{e}\n")
-    
-
 @bot.message_handler(is_chat_admin=True, commands=['start'])
 def start_handler(message):
     try:
@@ -58,7 +35,7 @@ def start_handler(message):
         while bot.update_switcher is True:
             for stock in stocks_list:
                 stock.get_new_prices()
-                sort_with_notification(stock)
+                levels_with_notification(stock, bot)
             sleep(60*60)
     except Exception as e:
         logger.exception(f"Exeption in start handler: \n{e}\n")
