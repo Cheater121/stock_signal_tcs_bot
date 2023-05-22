@@ -33,10 +33,13 @@ def start_handler(message):
         bot.chat_id = message.chat.id
         bot.update_switcher = True
         while bot.update_switcher is True:
+            counter = 0
             for stock in stocks_list:
                 stock.get_new_prices()
                 levels_with_notification(stock, bot)
-            sleep(60*60)
+                counter += 1
+                sleep(1)
+            sleep(60*60 - counter)
     except Exception as e:
         logger.exception(f"Exeption in start handler: \n{e}\n")
 
