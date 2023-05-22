@@ -12,9 +12,13 @@ def levels_with_notification(stock, bot):
             if name != 'PRICE':
                 attention = '\U0000203C'
             for target in priority_list[i+1::]:
+                if name.startswith('MA') and (target.endswith('LOW') or target.endswith('HIGH')):
+                    continue
+                
                 bot.keyboard1 = types.InlineKeyboardMarkup()
                 url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}", url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
                 bot.keyboard1.add(url_btn)
+                
                 if old.get(name) > old.get(target) and new.get(name) < new.get(target):
                     print(f'{name} ({new.get(name)} rub.) vniz {target} ({new.get(target)} rub.)')
                     bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>{name}</b> ({new.get(name)} руб.) breakdown support <b>{target}</b> ({new.get(target)} руб.) \U0001F534{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
