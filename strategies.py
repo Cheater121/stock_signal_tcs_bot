@@ -9,12 +9,12 @@ def levels_with_notification(stock, bot):
         priority_list = ['PRICE', 'MA20', 'MA50', 'MA100', 'MA200', 'YESTERDAY_LOW', 'YESTERDAY_HIGH', 'WEEK_LOW', 'WEEK_HIGH', 'MONTH_LOW', 'MONTH_HIGH']
         for i in range(len(priority_list)):
             name = priority_list[i]
-            if name != 'PRICE':
-                attention = '\U0000203C'
             for target in priority_list[i+1::]:
                 if name.startswith('MA') and (target.endswith('LOW') or target.endswith('HIGH')):
                     continue
-                
+                if name.startswith('MA') and target.startswith('MA'):
+                    attention = '\U0000203C'
+                    
                 bot.keyboard1 = types.InlineKeyboardMarkup()
                 url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}", url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
                 bot.keyboard1.add(url_btn)
