@@ -3,7 +3,6 @@ from setup_logger import logger
 
 def levels_with_notification(stock, bot):
     try:
-        attention = ""
         old = stock.old
         new = stock.new
         priority_list = ['PRICE', 'MA20', 'MA50', 'MA100', 'MA200', 'YESTERDAY_LOW', 'YESTERDAY_HIGH', 'WEEK_LOW', 'WEEK_HIGH', 'MONTH_LOW', 'MONTH_HIGH']
@@ -12,6 +11,7 @@ def levels_with_notification(stock, bot):
             for target in priority_list[i+1::]:
                 if name.startswith('MA') and (target.endswith('LOW') or target.endswith('HIGH')):
                     continue
+                attention = ""
                 if name.startswith('MA') and target.startswith('MA'):
                     attention = '\U0000203C'
                     
@@ -28,4 +28,5 @@ def levels_with_notification(stock, bot):
         stock.old = stock.new
     except Exception as e:
         logger.exception(f"Exeption in sort method: \n{e}\n")
+
     
