@@ -14,6 +14,7 @@ from time import sleep
 from stock_info import stocks_list
 from setup_logger import logger
 from strategies import levels_with_notification
+from timers import time_checker
 
 
 
@@ -32,14 +33,13 @@ def start_handler(message):
         bot.send_message(message.chat.id, "Hello! Prepare for spam. To stop it use '/stop' command. And '/help' for all commands.")
         bot.chat_id = message.chat.id
         bot.update_switcher = True
-        while bot.update_switcher is True:
-            counter = 0
-            for stock in stocks_list:
-                stock.get_new_prices()
-                levels_with_notification(stock, bot)
-                counter += 1
-                sleep(1)
-            sleep(60*60 - counter)
+        while bot.update_switcher:
+            if time_checker():
+                for stock in stocks_list:
+                    stock.get_new_prices()
+                    levels_with_notification(stock, bot)
+                    sleep(1)
+            sleep(60)
     except Exception as e:
         logger.exception(f"Exeption in start handler: \n{e}\n")
 
