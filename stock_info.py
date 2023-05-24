@@ -5,6 +5,7 @@ from tinkoff.invest.utils import now
 from datetime import timedelta
 
 from setup_logger import logger
+from rsi import get_current_rsi
 
 
 dotenv.load_dotenv()
@@ -15,6 +16,8 @@ TCS_TOKEN = os.getenv("TCS_TOKEN")
 class Stock:
     old = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'YESTERDAY_LOW': 0, 'YESTERDAY_HIGH': 0, 'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
     new = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'YESTERDAY_LOW': 0, 'YESTERDAY_HIGH': 0, 'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
+    old_rsi = None
+    current_rsi = None
     
     
     def __init__(self, figi: str, ticker: str):
@@ -29,10 +32,12 @@ class Stock:
                month_low = 10**9
                seven_day_high = -1
                month_high = -1
+               close_prices = []
                for candle in client.get_all_candles(figi=self.figi, from_=now() - timedelta(days=200), interval=CandleInterval.CANDLE_INTERVAL_DAY):
                    counter += 1
                    #print(candle, "\n")
                    close_price = candle.close.units + candle.close.nano/(10**9)
+                   close_prices.append(close_price)
                    if counter > 0:
                        ma200 += close_price
                        if candle.is_complete is True:
@@ -56,7 +61,7 @@ class Stock:
                            seven_day_high = candle.high.units + candle.high.nano/(10**9)
                print(counter, f'{self.ticker} MA20 = {ma20/(counter-180)}', f'MA50 = {ma50/(counter-150)}', f'MA100 = {ma100/(counter-100)}', f'MA200 = {ma200/counter}', f'Price = {close_price}', f'Previous day low = {prev_day_low}', f'Seven day low = {seven_day_low}', f'Month low = {month_low}', f'Previous day high = {prev_day_high}', f'Seven day high = {seven_day_high}', f'Month high = {month_high}')
                self.new = {'PRICE': close_price, 'MA20': round(ma20/(counter-180), 2), 'MA50': round(ma50/(counter-150), 2), 'MA100': round(ma100/(counter-100), 2), 'MA200': round(ma200/counter, 2), 'YESTERDAY_LOW': prev_day_low, 'YESTERDAY_HIGH': prev_day_high, 'WEEK_LOW': seven_day_low, 'WEEK_HIGH': seven_day_high, 'MONTH_LOW': month_low, 'MONTH_HIGH': month_high}
-               #print(self.new)
+               self.current_rsi = get_current_rsi(close_prices)
        except Exception as e:
             logger.exception(f"Exeption in get prices method: \n{e}\n")
 
