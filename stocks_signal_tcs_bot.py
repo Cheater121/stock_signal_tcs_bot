@@ -13,7 +13,7 @@ from time import sleep
 
 from stock_info import stocks_list
 from setup_logger import logger
-from strategies import levels_with_notification
+from strategies import levels_with_notification, rsi_notification
 from timers import time_checker
 
 
@@ -36,8 +36,11 @@ def start_handler(message):
         while bot.update_switcher:
             if time_checker():
                 for stock in stocks_list:
+                    #ToDo: add stock.load_old_prices()
                     stock.get_new_prices()
                     levels_with_notification(stock, bot)
+                    #ToDo: add stock.save_old_prices()
+                    rsi_notification(stock, bot)
                     sleep(1)
             sleep(60)
     except Exception as e:
