@@ -41,19 +41,19 @@ def rsi_notification(stock, bot):
         if stock.old_rsi is not None and stock.old_rsi < 70 and stock.current_rsi > 70:
             attention = "\U000026A0"
             print(f'RSI is overbought ({stock.current_rsi}), be careful!')
-            bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>RSI</b> is overbought ({stock.current_rsi}), be careful!{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
+            bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>RSI</b> is overbought ({round(stock.current_rsi, 2)}), be careful!{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
         if stock.old_rsi is not None and stock.old_rsi > 70 and stock.current_rsi < 70:
             attention = "\U0000203C"
             print(f'RSI cross downward 70 ({stock.current_rsi}), time to sell!')
-            bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>RSI</b> cross downward 70 ({stock.current_rsi}), time to sell!\U0001F534{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
+            bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>RSI</b> cross downward 70 ({round(stock.current_rsi, 2)}), time to sell!\U0001F534{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
         if stock.old_rsi is not None and stock.old_rsi > 30 and stock.current_rsi < 30:
             attention = "\U000026A0"
             print(f'RSI is oversold ({stock.current_rsi}), be careful!')
-            bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>RSI</b> is oversold ({stock.current_rsi}), be careful!{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
+            bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>RSI</b> is oversold ({round(stock.current_rsi, 2)}), be careful!{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
         if stock.old_rsi is not None and stock.old_rsi < 30 and stock.current_rsi > 30:
             attention = "\U0000203C"
             print(f'RSI cross upward 30 ({stock.current_rsi}), time to buy!')
-            bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>RSI</b> cross upward 30 ({stock.current_rsi}), time to buy!\U0001F7E2{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
+            bot.send_message(bot.chat_id, f"{attention}${stock.ticker} <b>RSI</b> cross upward 30 ({round(stock.current_rsi, 2)}), time to buy!\U0001F7E2{attention}", parse_mode="HTML", reply_markup=bot.keyboard1)
         stock.old_rsi = stock.current_rsi
     except Exception as e:
         logger.exception(f"Exeption in rsi method: \n{e}\n")
