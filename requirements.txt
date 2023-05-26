@@ -2,4 +2,5 @@ python-dotenv
 pyTelegramBotAPI
 tinkoff-investments
 pandas
+pandas_ta
 numpy
