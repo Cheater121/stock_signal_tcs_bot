@@ -5,8 +5,8 @@ from time import sleep
 
 def levels_with_notification(stock, bot):
     try:
-        old = stock.old
-        new = stock.new
+        old = stock.old_levels
+        new = stock.levels
         priority_list = ['PRICE', 'MA20', 'MA50', 'MA100', 'MA200', 'YESTERDAY_LOW', 'YESTERDAY_HIGH', 'WEEK_LOW',
                          'WEEK_HIGH', 'MONTH_LOW', 'MONTH_HIGH']
         for i in range(len(priority_list)):
@@ -38,7 +38,7 @@ def levels_with_notification(stock, bot):
                                      f"resistance <b>{target}</b> ({new.get(target)} руб.){attention} \U0001F7E2",
                                      parse_mode="HTML", reply_markup=bot.keyboard1)
                     sleep(1)
-        stock.old = stock.new
+        stock.old_levels = stock.levels
     except Exception as e:
         logger.exception(f"Exception in sort levels method: \n{e}\n")
 

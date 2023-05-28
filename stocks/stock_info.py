@@ -14,10 +14,10 @@ TCS_TOKEN = os.getenv("TCS_TOKEN")
 
 
 class Stock:
-    old = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'YESTERDAY_LOW': 0, 'YESTERDAY_HIGH': 0,
-           'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
-    new = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'YESTERDAY_LOW': 0, 'YESTERDAY_HIGH': 0,
-           'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
+    old_levels = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'YESTERDAY_LOW': 0, 'YESTERDAY_HIGH': 0,
+                  'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
+    levels = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'YESTERDAY_LOW': 0, 'YESTERDAY_HIGH': 0,
+              'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
     # RSI Strategy
     old_rsi = None
     current_rsi = None
@@ -72,11 +72,11 @@ class Stock:
                       f'Previous day low = {prev_day_low}', f'Seven day low = {seven_day_low}',
                       f'Month low = {month_low}', f'Previous day high = {prev_day_high}',
                       f'Seven day high = {seven_day_high}', f'Month high = {month_high}')
-                self.new = {'PRICE': close_price, 'MA20': round(ma20 / (counter - 180), 2),
-                            'MA50': round(ma50 / (counter - 150), 2), 'MA100': round(ma100 / (counter - 100), 2),
-                            'MA200': round(ma200 / counter, 2), 'YESTERDAY_LOW': prev_day_low,
-                            'YESTERDAY_HIGH': prev_day_high, 'WEEK_LOW': seven_day_low, 'WEEK_HIGH': seven_day_high,
-                            'MONTH_LOW': month_low, 'MONTH_HIGH': month_high}
+                self.levels = {'PRICE': close_price, 'MA20': round(ma20 / (counter - 180), 2),
+                               'MA50': round(ma50 / (counter - 150), 2), 'MA100': round(ma100 / (counter - 100), 2),
+                               'MA200': round(ma200 / counter, 2), 'YESTERDAY_LOW': prev_day_low,
+                               'YESTERDAY_HIGH': prev_day_high, 'WEEK_LOW': seven_day_low, 'WEEK_HIGH': seven_day_high,
+                               'MONTH_LOW': month_low, 'MONTH_HIGH': month_high}
                 self.current_rsi = get_current_rsi(close_prices)
                 self.macd, self.macds = get_macd(close_prices)
         except Exception as e:
