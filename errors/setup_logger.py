@@ -1,6 +1,6 @@
 import logging
 
-#adding logger
+# adding logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 handler = logging.FileHandler('error.log')
