@@ -7,6 +7,8 @@ from datetime import timedelta
 from errors.setup_logger import logger
 from strategies.rsi import get_current_rsi
 from strategies.macd import get_macd
+from strategies.moving_averages import get_ma
+from strategies.interval_levels import get_interval_levels
 
 dotenv.load_dotenv()
 
@@ -34,48 +36,28 @@ class Stock:
     def get_new_prices(self):
         try:
             with Client(TCS_TOKEN) as client:
-                ma20, ma50, ma100, ma200, counter = 0, 0, 0, 0, 0
-                seven_day_low = 10 ** 9
-                month_low = 10 ** 9
-                seven_day_high = -1
-                month_high = -1
                 close_prices = []
-                for candle in client.get_all_candles(figi=self.figi, from_=now() - timedelta(days=200),
+                minimal_values = []
+                maximum_values = []
+                for candle in client.get_all_candles(figi=self.figi, from_=now() - timedelta(days=300),
                                                      interval=CandleInterval.CANDLE_INTERVAL_DAY):
-                    counter += 1
                     # print(candle, "\n")
                     close_price = candle.close.units + candle.close.nano / (10 ** 9)
                     close_prices.append(close_price)
-                    if counter > 0:
-                        ma200 += close_price
-                        if candle.is_complete is True:
-                            prev_day_low = candle.low.units + candle.low.nano / (10 ** 9)
-                            prev_day_high = candle.high.units + candle.high.nano / (10 ** 9)
-                    if counter > 100:
-                        ma100 += close_price
-                    if counter > 150:
-                        ma50 += close_price
-                    if counter > 180:
-                        ma20 += close_price
-                    if counter > 170:
-                        if candle.low.units + candle.low.nano / (10 ** 9) < month_low:
-                            month_low = candle.low.units + candle.low.nano / (10 ** 9)
-                        if candle.high.units + candle.high.nano / (10 ** 9) > month_high:
-                            month_high = candle.high.units + candle.high.nano / (10 ** 9)
-                    if counter > 193:
-                        if candle.low.units + candle.low.nano / (10 ** 9) < seven_day_low:
-                            seven_day_low = candle.low.units + candle.low.nano / (10 ** 9)
-                        if candle.high.units + candle.high.nano / (10 ** 9 > seven_day_high):
-                            seven_day_high = candle.high.units + candle.high.nano / (10 ** 9)
-                print(counter, f'{self.ticker} MA20 = {ma20 / (counter - 180)}', f'MA50 = {ma50 / (counter - 150)}',
-                      f'MA100 = {ma100 / (counter - 100)}', f'MA200 = {ma200 / counter}', f'Price = {close_price}',
-                      f'Previous day low = {prev_day_low}', f'Seven day low = {seven_day_low}',
+                    if candle.is_complete:
+                        minimal_values.append(candle.low.units + candle.low.nano / (10 ** 9))
+                        maximum_values.append(candle.high.units + candle.high.nano / (10 ** 9))
+                ma20, ma50, ma100, ma200 = get_ma(close_prices)
+                month_low, month_high, week_low, week_high, prev_day_low, prev_day_high = get_interval_levels(minimal_values, maximum_values)
+                print(f'{self.ticker} MA20 = {ma20}', f'MA50 = {ma50}',
+                      f'MA100 = {ma100}', f'MA200 = {ma200}', f'Price = {close_price}',
+                      f'Previous day low = {prev_day_low}', f'Seven day low = {week_low}',
                       f'Month low = {month_low}', f'Previous day high = {prev_day_high}',
-                      f'Seven day high = {seven_day_high}', f'Month high = {month_high}')
-                self.levels = {'PRICE': close_price, 'MA20': round(ma20 / (counter - 180), 2),
-                               'MA50': round(ma50 / (counter - 150), 2), 'MA100': round(ma100 / (counter - 100), 2),
-                               'MA200': round(ma200 / counter, 2), 'YESTERDAY_LOW': prev_day_low,
-                               'YESTERDAY_HIGH': prev_day_high, 'WEEK_LOW': seven_day_low, 'WEEK_HIGH': seven_day_high,
+                      f'Seven day high = {week_high}', f'Month high = {month_high}')
+                self.levels = {'PRICE': close_price, 'MA20': round(ma20, 2),
+                               'MA50': round(ma50, 2), 'MA100': round(ma100, 2),
+                               'MA200': round(ma200, 2), 'YESTERDAY_LOW': prev_day_low,
+                               'YESTERDAY_HIGH': prev_day_high, 'WEEK_LOW': week_low, 'WEEK_HIGH': week_high,
                                'MONTH_LOW': month_low, 'MONTH_HIGH': month_high}
                 self.current_rsi = get_current_rsi(close_prices)
                 self.macd, self.macds = get_macd(close_prices)
