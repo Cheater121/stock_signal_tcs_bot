@@ -33,14 +33,14 @@ class Stock:
         self.figi = figi
         self.ticker = ticker
 
-    def get_new_prices(self):
+    def get_new_prices(self, interval=CandleInterval.CANDLE_INTERVAL_DAY, days=300):
         try:
             with Client(TCS_TOKEN) as client:
                 close_prices = []
                 minimal_values = []
                 maximum_values = []
-                for candle in client.get_all_candles(figi=self.figi, from_=now() - timedelta(days=300),
-                                                     interval=CandleInterval.CANDLE_INTERVAL_DAY):
+                for candle in client.get_all_candles(figi=self.figi, from_=now() - timedelta(days=days),
+                                                     interval=interval):
                     # print(candle, "\n")
                     close_price = candle.close.units + candle.close.nano / (10 ** 9)
                     close_prices.append(close_price)
