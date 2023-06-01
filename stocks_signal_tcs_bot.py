@@ -1,7 +1,7 @@
 """ToDo:
 - add the ability to search for an instrument by ticker
 - add the ability to edit (add/remove) the list of tracked instruments
-- add work with database
+- add work with database / redis
 """
 
 import os
@@ -10,10 +10,11 @@ import telebot
 
 from telebot import custom_filters
 from time import sleep
+from tinkoff.invest import CandleInterval
 
 from stocks.stock_info import stocks_list
 from errors.setup_logger import logger
-from strategies.strategies import levels_with_notification, rsi_notification, macd_notification
+from strategies.strategies import levels_with_notification, rsi_notification, macd_notification, sma_hour_notification
 from utils.timers import time_checker
 
 dotenv.load_dotenv()
@@ -35,6 +36,9 @@ def start_handler(message):
             if time_checker():
                 for stock in stocks_list:
                     # ToDo: add stock.load_old_prices()
+                    stock.get_new_prices(interval=CandleInterval.CANDLE_INTERVAL_HOUR, days=100)
+                    sma_hour_notification(stock, bot)
+                    sleep(1)
                     stock.get_new_prices()
                     levels_with_notification(stock, bot)
                     # ToDo: add stock.save_old_prices()
