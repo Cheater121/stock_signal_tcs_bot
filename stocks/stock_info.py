@@ -81,6 +81,7 @@ class Stock:
                 self.macd, self.macds = get_macd(close_prices)
             elif timeframe == 'HOUR':
                 self.ma20_hour, self.ma50_hour, *_ = get_ma(close_prices)
+                print(f'SMA20: {self.ma20_hour}, SMA50: {self.ma50_hour}')
             else:
                 raise AssertionError
         except Exception as e:
