@@ -40,7 +40,7 @@ def start_handler(message):
                     sma_hour_notification(stock, bot)
                     sleep(1)
                     stock.get_new_prices()
-                    #levels_with_notification(stock, bot)
+                    levels_with_notification(stock, bot)
                     # ToDo: add stock.save_old_prices()
                     rsi_notification(stock, bot)
                     sleep(1)
