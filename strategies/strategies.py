@@ -50,7 +50,7 @@ def rsi_notification(stock, bot):
                                              url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
         bot.keyboard1.add(url_btn)
         # attention to sell
-        if stock.old_rsi is not None and stock.old_rsi < 70 < stock.current_rsi:
+        if stock.old_rsi and stock.old_rsi < 70 < stock.current_rsi:
             attention = "\U000026A0"
             print(f'RSI is overbought ({stock.current_rsi}), be careful!')
             bot.send_message(bot.chat_id,
@@ -58,14 +58,14 @@ def rsi_notification(stock, bot):
                              f"be careful!{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
         # sell
-        if stock.old_rsi is not None and stock.old_rsi > 70 > stock.current_rsi:
+        if stock.old_rsi and stock.old_rsi > 70 > stock.current_rsi:
             attention = "\U0000203C"
             print(f'RSI cross downward 70 ({stock.current_rsi}), time to sell!')
             bot.send_message(bot.chat_id,
                              f"{attention}${stock.ticker} <b>RSI</b> cross downward 70 ({round(stock.current_rsi, 2)}), time to sell!\U0001F534{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
         # attention to buy
-        if stock.old_rsi is not None and stock.old_rsi > 30 > stock.current_rsi:
+        if stock.old_rsi and stock.old_rsi > 30 > stock.current_rsi:
             attention = "\U000026A0"
             print(f'RSI is oversold ({stock.current_rsi}), be careful!')
             bot.send_message(bot.chat_id,
@@ -73,7 +73,7 @@ def rsi_notification(stock, bot):
                              f"careful!{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
         # buy
-        if stock.old_rsi is not None and stock.old_rsi < 30 < stock.current_rsi:
+        if stock.old_rsi and stock.old_rsi < 30 < stock.current_rsi:
             attention = "\U0000203C"
             print(f'RSI cross upward 30 ({stock.current_rsi}), time to buy!')
             bot.send_message(bot.chat_id,
@@ -92,14 +92,14 @@ def macd_notification(stock, bot):
                                              url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
         bot.keyboard1.add(url_btn)
         # buy
-        if stock.old_macd is not None and stock.old_macd < stock.macds < stock.macd:
+        if stock.old_macd and stock.old_macd < stock.old_macds and stock.macd > stock.macds:
             attention = "\U0000203C"
             print('MACD cross upward the signal line MACDs, time to buy!')
             bot.send_message(bot.chat_id,
                              f"{attention}${stock.ticker} <b>MACD</b> cross upward the signal line MACDs!\U0001F7E2{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
         # sell
-        if stock.old_macd is not None and stock.old_macd > stock.old_macds and stock.macd < stock.macds:
+        if stock.old_macd and stock.old_macd > stock.old_macds and stock.macd < stock.macds:
             attention = "\U0000203C"
             print('MACD cross downward the signal line MACDs, time to sell!')
             bot.send_message(bot.chat_id,
@@ -108,3 +108,29 @@ def macd_notification(stock, bot):
         stock.old_macd, stock.old_macds = stock.macd, stock.macds
     except Exception as e:
         logger.exception(f"Exception in rsi method: \n{e}\n")
+ 
+               
+def sma_hour_notification(stock, bot):
+    try:
+        bot.keyboard1 = types.InlineKeyboardMarkup()
+        url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}",
+                                             url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
+        bot.keyboard1.add(url_btn)
+        # buy
+        if stock.old_ma20_hour and stock.old_ma20_hour < stock.old_ma50_hour and stock.ma20_hour > stock.ma50_hour:
+            attention = "\U0000203C"
+            print('HOUR SMA20 cross upward SMA50, time to buy!')
+            bot.send_message(bot.chat_id,
+                             f"{attention*3}${stock.ticker} <b>HOUR SMA20</b> cross upward SMA50!\U0001F7E2{attention*3}",
+                             parse_mode="HTML", reply_markup=bot.keyboard1)
+        # sell
+        if stock.old_ma20_hour and stock.old_ma20_hour > stock.old_ma50_hour and stock.ma20_hour < stock.ma50_hour:
+            attention = "\U0000203C"
+            print('HOUR SMA20 cross downward SMA50, time to sell!')
+            bot.send_message(bot.chat_id,
+                             f"{attention*3}${stock.ticker} <b>HOUR SMA20</b> cross downward SMA50!\U0001F534{attention*3}",
+                             parse_mode="HTML", reply_markup=bot.keyboard1)
+        stock.old_ma20_hour, stock.old_ma50_hour = stock.ma20_hour, stock.ma50_hour
+    except Exception as e:
+        logger.exception(f"Exception in rsi method: \n{e}\n")
+        
