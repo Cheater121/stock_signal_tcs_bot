@@ -3,7 +3,7 @@ This is MVP for my friend.
 
 This project is a stock price tracker that uses the Tinkoff API and the Telegram Bot API to provide real-time updates (once per hour by default) on stock prices and send notifications when certain price thresholds are met.
 
-Tracked Indicators: Moving Average: 20-50-100-200 days; High/low interval: 1-7-30 days; RSI strategy (14 days); MACD Strategy (26-12-9 days). 
+Tracked Indicators: Moving Average: 20-50-100-200 days; High/low interval: 1-7-30 days; RSI strategy (14 days); MACD Strategy (26-12-9 days); Simple Moving Averages 20-50 days at 1 hour timeframe. 
 
 
 ## Table of Contents
