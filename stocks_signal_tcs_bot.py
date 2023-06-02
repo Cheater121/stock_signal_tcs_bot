@@ -38,14 +38,14 @@ def start_handler(message):
                     # ToDo: add stock.load_old_prices()
                     stock.get_new_prices(interval=CandleInterval.CANDLE_INTERVAL_HOUR, days=100)
                     sma_hour_notification(stock, bot)
-                    sleep(1)
+                    sleep(4)
                     stock.get_new_prices()
                     levels_with_notification(stock, bot)
                     # ToDo: add stock.save_old_prices()
                     rsi_notification(stock, bot)
-                    sleep(1)
+                    sleep(4)
                     macd_notification(stock, bot)
-                    sleep(1)
+                    sleep(4)
             sleep(60)
     except Exception as e:
         logger.exception(f"Exception in start handler: \n{e}\n")
@@ -97,3 +97,4 @@ if __name__ == "__main__":
     bot.add_custom_filter(custom_filters.IsAdminFilter(bot))
     bot.polling()
     print("finished")
+    
