@@ -57,6 +57,7 @@ def rsi_notification(stock, bot):
                              f"{attention}${stock.ticker} <b>RSI</b> is overbought ({round(stock.current_rsi, 2)}), "
                              f"be careful!{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
+            sleep(4)
         # sell
         if stock.old_rsi and stock.old_rsi > 70 > stock.current_rsi:
             attention = "\U0000203C"
@@ -64,6 +65,7 @@ def rsi_notification(stock, bot):
             bot.send_message(bot.chat_id,
                              f"{attention}${stock.ticker} <b>RSI</b> cross downward 70 ({round(stock.current_rsi, 2)}), time to sell!\U0001F534{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
+            sleep(4)
         # attention to buy
         if stock.old_rsi and stock.old_rsi > 30 > stock.current_rsi:
             attention = "\U000026A0"
