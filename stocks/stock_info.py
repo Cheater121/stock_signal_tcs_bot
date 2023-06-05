@@ -1,5 +1,3 @@
-import os
-import dotenv
 from tinkoff.invest import CandleInterval, Client
 from tinkoff.invest.utils import now
 from datetime import timedelta
@@ -9,10 +7,11 @@ from strategies.rsi import get_current_rsi
 from strategies.macd import get_macd
 from strategies.moving_averages import get_ma
 from strategies.interval_levels import get_interval_levels
+from config_data.config import load_config
 
-dotenv.load_dotenv()
+config = load_config()
 
-TCS_TOKEN = os.getenv("TCS_TOKEN")
+TCS_TOKEN = config.tcs_client.token
 
 
 class Stock:
