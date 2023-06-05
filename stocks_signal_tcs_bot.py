@@ -4,8 +4,6 @@
 - add work with database / redis
 """
 
-import os
-import dotenv
 import telebot
 
 from telebot import custom_filters
@@ -16,10 +14,12 @@ from stocks.stock_info import stocks_list
 from errors.setup_logger import logger
 from strategies.strategies import levels_with_notification, rsi_notification, macd_notification, sma_hour_notification
 from utils.timers import time_checker
+from config_data.config import load_config
 
-dotenv.load_dotenv()
 
-TG_TOKEN = os.getenv('TG_TOKEN')
+config = load_config()
+
+TG_TOKEN = config.tg_bot.token
 
 bot = telebot.TeleBot(TG_TOKEN)
 bot.update_switcher = True
