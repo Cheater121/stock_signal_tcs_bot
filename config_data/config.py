@@ -27,15 +27,13 @@ class Config:
     db: DatabaseConfig
 
 
-def load_config(path: str=None) -> Config:
-
+def load_config(path: str = None) -> Config:
     env: Env = Env()
     env.read_env(path)
 
     return Config(tg_bot=TgBot(token=env('TG_TOKEN')),
-    tcs_client=TCSClient(token=env('TCS_TOKEN')),
+                  tcs_client=TCSClient(token=env('TCS_TOKEN')),
                   db=DatabaseConfig(database=env('DATABASE'),
                                     db_host=env('DB_HOST'),
                                     db_user=env('DB_USER'),
                                     db_password=env('DB_PASSWORD')))
-

@@ -20,23 +20,22 @@ class Stock:
                   'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
     levels = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'YESTERDAY_LOW': 0, 'YESTERDAY_HIGH': 0,
               'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
-              
+
     # RSI Strategy
     old_rsi = None
     current_rsi = None
-    
+
     # MACD Strategy
     old_macd = None
     old_macds = None
     macd = None
     macds = None
-    
+
     # SMA 20/50 Strategy
     old_ma20_hour = None
     old_ma50_hour = None
     ma20_hour = None
     ma50_hour = None
-    
 
     def __init__(self, figi: str, ticker: str):
         self.figi = figi
@@ -60,12 +59,13 @@ class Stock:
                 self._update_prices(close_price, close_prices, minimal_values, maximum_values, timeframe)
         except Exception as e:
             logger.exception(f"Exception in get prices method: \n{e}\n")
-            
+
     def _update_prices(self, close_price, close_prices, minimal_values, maximum_values, timeframe='DAY'):
         try:
             if timeframe == 'DAY':
                 ma20, ma50, ma100, ma200 = get_ma(close_prices)
-                month_low, month_high, week_low, week_high, prev_day_low, prev_day_high = get_interval_levels(minimal_values, maximum_values)
+                month_low, month_high, week_low, week_high, prev_day_low, prev_day_high = get_interval_levels(
+                    minimal_values, maximum_values)
                 print(f'{self.ticker} MA20 = {ma20}', f'MA50 = {ma50}',
                       f'MA100 = {ma100}', f'MA200 = {ma200}', f'Price = {close_price}',
                       f'Previous day low = {prev_day_low}', f'Seven day low = {week_low}',
