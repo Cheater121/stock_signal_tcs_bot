@@ -1,6 +1,9 @@
-environs
+environs~=9.5.0
 pyTelegramBotAPI
 tinkoff-investments
-pandas
+pandas~=2.0.1
 pandas_ta
-numpy
+numpy~=1.24.3
+peewee~=3.16.0
+psycopg2
+tinkoff~=0.1.1

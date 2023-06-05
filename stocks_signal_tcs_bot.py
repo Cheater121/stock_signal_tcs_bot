@@ -16,7 +16,6 @@ from strategies.strategies import levels_with_notification, rsi_notification, ma
 from utils.timers import time_checker
 from config_data.config import load_config
 
-
 config = load_config()
 
 TG_TOKEN = config.tg_bot.token
@@ -35,12 +34,13 @@ def start_handler(message):
         while bot.update_switcher:
             if time_checker():
                 for stock in stocks_list:
-                    # ToDo: add stock.load_old_prices()
+                    sleep(1)  # Delay for Tinkoff API
+                    stock.load_old_prices()  # load from database
                     stock.get_new_prices(interval=CandleInterval.CANDLE_INTERVAL_HOUR, days=100)
                     sma_hour_notification(stock, bot)
                     stock.get_new_prices()
                     levels_with_notification(stock, bot)
-                    # ToDo: add stock.save_old_prices()
+                    stock.save_old_prices()  # save to database
                     rsi_notification(stock, bot)
                     macd_notification(stock, bot)
             sleep(60)
@@ -94,4 +94,3 @@ if __name__ == "__main__":
     bot.add_custom_filter(custom_filters.IsAdminFilter(bot))
     bot.polling()
     print("finished")
-    

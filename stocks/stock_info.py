@@ -1,6 +1,6 @@
 from tinkoff.invest import CandleInterval, Client
 from tinkoff.invest.utils import now
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from errors.setup_logger import logger
 from strategies.rsi import get_current_rsi
@@ -8,13 +8,14 @@ from strategies.macd import get_macd
 from strategies.moving_averages import get_ma
 from strategies.interval_levels import get_interval_levels
 from config_data.config import load_config
+from models.models import db, Stock, Indicator
 
 config = load_config()
 
 TCS_TOKEN = config.tcs_client.token
 
 
-class Stock:
+class StockAnalyzer:
     # Support/resistance levels Strategy
     old_levels = {'PRICE': 0, 'MA20': 0, 'MA50': 0, 'MA100': 0, 'MA200': 0, 'YESTERDAY_LOW': 0, 'YESTERDAY_HIGH': 0,
                   'WEEK_LOW': 0, 'WEEK_HIGH': 0, 'MONTH_LOW': 0, 'MONTH_HIGH': 0}
@@ -86,27 +87,69 @@ class Stock:
         except Exception as e:
             logger.exception(f"Exception in update prices method: \n{e}\n")
 
+    def load_old_prices(self): # ToDo write this method
+        try:
+            pass
+        except Exception as e:
+            logger.exception(f"Exception in load old prices method: \n{e}\n")
 
-ozon = Stock("BBG00Y91R9T3", "OZON")
-sber = Stock("BBG004730N88", "SBER")
-sgzh = Stock("BBG0100R9963", "SGZH")
-poly = Stock("BBG004PYF2N3", "POLY")
-vkco = Stock("BBG00178PGX3", "VKCO")
-tatn = Stock("BBG004RVFFC0", "TATN")
-nvtk = Stock("BBG00475KKY8", "NVTK")
-spbe = Stock("BBG002GHV6L9", "SPBE")
-nlmk = Stock("BBG004S681B4", "NLMK")
-pikk = Stock("BBG004S68BH6", "PIKK")
-five = Stock("BBG00JXPFBN0", "FIVE")
-afks = Stock("BBG004S68614", "AFKS")
-yndx = Stock("BBG006L8G4H1", "YNDX")
-rosn = Stock("BBG004731354", "ROSN")
-alrs = Stock("BBG004S68B31", "ALRS")
-gmkn = Stock("BBG004731489", "GMKN")
-aflt = Stock("BBG004S683W7", "AFLT")
-gazp = Stock("BBG004730RP0", "GAZP")
-lkoh = Stock("BBG004731032", "LKOH")
-moex = Stock("BBG004730JJ5", "MOEX")
+    def save_old_prices(self):
+        try:
+            db.create_tables([Stock, Indicator])
+        except Exception as e:
+            logger.exception(f"Exception in create tables method: \n{e}\n")
+
+        try:
+            stock = Stock.select().where(Stock.ticker == self.ticker)
+        except Exception as e:
+            stock = Stock(ticker=self.ticker, figi=self.figi)
+            stock.save()
+            logger.exception(f"Exception in save stock method: \n{e}\n")
+
+        try:
+            indicators = Indicator(price=self.old_levels.get("PRICE"),
+                                   from_stock=stock,
+                                   ma20=self.old_levels.get("MA20"),
+                                   ma50=self.old_levels.get("MA50"),
+                                   ma100=self.old_levels.get("MA100"),
+                                   ma200=self.old_levels.get("MA200"),
+                                   yesterday_low=self.old_levels.get("YESTERDAY_LOW"),
+                                   yesterday_high=self.old_levels.get("YESTERDAY_HIGH"),
+                                   week_low=self.old_levels.get("WEEK_LOW"),
+                                   week_high=self.old_levels.get("WEEK_HIGH"),
+                                   month_low=self.old_levels.get("MONTH_LOW"),
+                                   month_high=self.old_levels.get("MONTH_HIGH"),
+                                   rsi=self.old_rsi,
+                                   macd=self.old_macd,
+                                   macds=self.old_macds,
+                                   ma20_hour=self.old_ma20_hour,
+                                   ma50_hour=self.old_ma50_hour,
+                                   date=datetime.now())
+            indicators.save()
+        except Exception as e:
+            logger.exception(f"Exception in save old prices (indicators) method: \n{e}\n")
+
+
+ozon = StockAnalyzer("BBG00Y91R9T3", "OZON")
+sber = StockAnalyzer("BBG004730N88", "SBER")
+sgzh = StockAnalyzer("BBG0100R9963", "SGZH")
+poly = StockAnalyzer("BBG004PYF2N3", "POLY")
+vkco = StockAnalyzer("BBG00178PGX3", "VKCO")
+tatn = StockAnalyzer("BBG004RVFFC0", "TATN")
+nvtk = StockAnalyzer("BBG00475KKY8", "NVTK")
+spbe = StockAnalyzer("BBG002GHV6L9", "SPBE")
+nlmk = StockAnalyzer("BBG004S681B4", "NLMK")
+pikk = StockAnalyzer("BBG004S68BH6", "PIKK")
+five = StockAnalyzer("BBG00JXPFBN0", "FIVE")
+afks = StockAnalyzer("BBG004S68614", "AFKS")
+yndx = StockAnalyzer("BBG006L8G4H1", "YNDX")
+rosn = StockAnalyzer("BBG004731354", "ROSN")
+alrs = StockAnalyzer("BBG004S68B31", "ALRS")
+gmkn = StockAnalyzer("BBG004731489", "GMKN")
+aflt = StockAnalyzer("BBG004S683W7", "AFLT")
+gazp = StockAnalyzer("BBG004730RP0", "GAZP")
+lkoh = StockAnalyzer("BBG004731032", "LKOH")
+moex = StockAnalyzer("BBG004730JJ5", "MOEX")
 
 stocks_list = [ozon, sber, sgzh, poly, vkco, tatn, nvtk, spbe, nlmk, pikk, five, afks, yndx, rosn, alrs, gmkn, aflt,
                gazp, lkoh, moex]
