@@ -35,12 +35,12 @@ def start_handler(message):
             if time_checker():
                 for stock in stocks_list:
                     sleep(1)  # Delay for Tinkoff API
-                    stock.load_old_prices()  # load from database
+                    #stock.load_old_prices()  # load from database
                     stock.get_new_prices(interval=CandleInterval.CANDLE_INTERVAL_HOUR, days=100)
                     sma_hour_notification(stock, bot)
                     stock.get_new_prices()
                     levels_with_notification(stock, bot)
-                    stock.save_old_prices()  # save to database
+                    #stock.save_old_prices()  # save to database
                     rsi_notification(stock, bot)
                     macd_notification(stock, bot)
             sleep(60)
@@ -94,3 +94,4 @@ if __name__ == "__main__":
     bot.add_custom_filter(custom_filters.IsAdminFilter(bot))
     bot.polling()
     print("finished")
+    
