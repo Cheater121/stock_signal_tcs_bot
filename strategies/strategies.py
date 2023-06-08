@@ -24,7 +24,7 @@ def levels_with_notification(stock, bot):
                 bot.keyboard1.add(url_btn)
                 # sell
                 if old.get(name) > old.get(target) and new.get(name) < new.get(target):
-                    print(f'{name} ({new.get(name)} rub.) vniz {target} ({new.get(target)} rub.)')
+                    print(f'{name} ({new.get(name)} rub.) down {target} ({new.get(target)} rub.)')
                     bot.send_message(bot.chat_id,
                                      f"{attention}${stock.ticker} <b>{name}</b> ({new.get(name)} руб.) breakdown "
                                      f"support <b>{target}</b> ({new.get(target)} руб.) \U0001F534{attention}",
@@ -32,7 +32,7 @@ def levels_with_notification(stock, bot):
                     sleep(4)
                 # buy
                 if old.get(name) < old.get(target) and new.get(name) > new.get(target):
-                    print(f'{name} ({new.get(name)} rub.) vverh {target} ({new.get(target)} rub.)')
+                    print(f'{name} ({new.get(name)} rub.) up {target} ({new.get(target)} rub.)')
                     bot.send_message(bot.chat_id,
                                      f"{attention}${stock.ticker} <b>{name}</b> ({new.get(name)} руб.) break upward "
                                      f"resistance <b>{target}</b> ({new.get(target)} руб.){attention} \U0001F7E2",
@@ -66,7 +66,8 @@ def rsi_notification(stock, bot):
             attention = "\U0000203C"
             print(f'RSI cross downward 70 ({current_rsi}), time to sell!')
             bot.send_message(bot.chat_id,
-                             f"{attention}${stock.ticker} <b>RSI</b> cross downward 70 ({round(current_rsi, 2)}), time to sell!\U0001F534{attention}",
+                             f"{attention}${stock.ticker} <b>RSI</b> cross downward 70 ({round(current_rsi, 2)}), "
+                             f"time to sell!\U0001F534{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
             sleep(4)
         # attention to buy
@@ -108,7 +109,8 @@ def macd_notification(stock, bot):
             attention = "\U0000203C"
             print('MACD cross upward the signal line MACDs, time to buy!')
             bot.send_message(bot.chat_id,
-                             f"{attention}${stock.ticker} <b>MACD</b> cross upward the signal line MACDs!\U0001F7E2{attention}",
+                             f"{attention}${stock.ticker} <b>MACD</b> cross upward the signal line "
+                             f"MACDs!\U0001F7E2{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
             sleep(4)
         # sell
@@ -116,7 +118,8 @@ def macd_notification(stock, bot):
             attention = "\U0000203C"
             print('MACD cross downward the signal line MACDs, time to sell!')
             bot.send_message(bot.chat_id,
-                             f"{attention}${stock.ticker} <b>MACD</b> cross downward the signal line MACDs!\U0001F534{attention}",
+                             f"{attention}${stock.ticker} <b>MACD</b> cross downward the signal "
+                             f"line MACDs!\U0001F534{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
             sleep(4)
         stock.old_levels["MACD"], stock.old_levels["MACDs"] = stock.levels["MACD"], stock.levels["MACDs"]
@@ -135,13 +138,13 @@ def sma_hour_notification(stock, bot):
         ma20_hour = stock.levels.get("MA20_HOUR")
         old_ma50_hour = stock.old_levels.get("MA50_HOUR")
         ma50_hour = stock.levels.get("MA50_HOUR")
-        print(old_ma20_hour, old_ma50_hour, ma20_hour, ma50_hour)
         # buy
         if old_ma20_hour and old_ma20_hour < old_ma50_hour and ma20_hour > ma50_hour:
             attention = "\U0000203C"
             print('HOUR SMA20 cross upward SMA50, time to buy!')
             bot.send_message(bot.chat_id,
-                             f"{attention*3}${stock.ticker} <b>HOUR SMA20</b> cross upward SMA50!\U0001F7E2{attention*3}",
+                             f"{attention*3}${stock.ticker} <b>HOUR SMA20</b> cross upward "
+                             f"SMA50!\U0001F7E2{attention*3}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
             sleep(4)
         # sell
@@ -149,7 +152,8 @@ def sma_hour_notification(stock, bot):
             attention = "\U0000203C"
             print('HOUR SMA20 cross downward SMA50, time to sell!')
             bot.send_message(bot.chat_id,
-                             f"{attention*3}${stock.ticker} <b>HOUR SMA20</b> cross downward SMA50!\U0001F534{attention*3}",
+                             f"{attention*3}${stock.ticker} <b>HOUR SMA20</b> cross downward "
+                             f"SMA50!\U0001F534{attention*3}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
             sleep(4)
         stock.old_levels["MA20_HOUR"], stock.old_levels["MA50_HOUR"] = stock.levels["MA20_HOUR"], stock.levels["MA50_HOUR"]

@@ -1,6 +1,6 @@
 from tinkoff.invest import CandleInterval, Client
 from tinkoff.invest.utils import now
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from errors.setup_logger import logger
 from strategies.rsi import get_current_rsi
@@ -8,7 +8,6 @@ from strategies.macd import get_macd
 from strategies.moving_averages import get_ma
 from strategies.interval_levels import get_interval_levels
 from config_data.config import load_config
-
 
 config = load_config()
 
@@ -20,12 +19,12 @@ class StockAnalyzer:
     def __init__(self, figi: str, ticker: str):
         self.figi = figi
         self.ticker = ticker
-        self.old_levels = {"PRICE": 0, "MA20": 0, "MA50": 0, "MA100": 0, "MA200": 0, "YESTERDAY_LOW": 0, "YESTERDAY_HIGH": 0,
-              "WEEK_LOW": 0, "WEEK_HIGH": 0, "MONTH_LOW": 0, "MONTH_HIGH": 0, 
-              "RSI": None, "MACD": None, "MACDs": None, "MA20_HOUR": None, "MA50_HOUR": None}
-        self.levels = {"PRICE": 0, "MA20": 0, "MA50": 0, "MA100": 0, "MA200": 0, "YESTERDAY_LOW": 0, "YESTERDAY_HIGH": 0,
-              "WEEK_LOW": 0, "WEEK_HIGH": 0, "MONTH_LOW": 0, "MONTH_HIGH": 0, 
-              "RSI": None, "MACD": None, "MACDs": None, "MA20_HOUR": None, "MA50_HOUR": None}
+        self.old_levels = {"PRICE": 0, "MA20": 0, "MA50": 0, "MA100": 0, "MA200": 0, "YESTERDAY_LOW": 0,
+                           "YESTERDAY_HIGH": 0, "WEEK_LOW": 0, "WEEK_HIGH": 0, "MONTH_LOW": 0, "MONTH_HIGH": 0,
+                           "RSI": None, "MACD": None, "MACDs": None, "MA20_HOUR": None, "MA50_HOUR": None}
+        self.levels = {"PRICE": 0, "MA20": 0, "MA50": 0, "MA100": 0, "MA200": 0, "YESTERDAY_LOW": 0,
+                       "YESTERDAY_HIGH": 0, "WEEK_LOW": 0, "WEEK_HIGH": 0, "MONTH_LOW": 0, "MONTH_HIGH": 0,
+                       "RSI": None, "MACD": None, "MACDs": None, "MA20_HOUR": None, "MA50_HOUR": None}
 
     def get_new_prices(self, interval=CandleInterval.CANDLE_INTERVAL_DAY, days=300):
         try:
@@ -58,16 +57,15 @@ class StockAnalyzer:
                                "MA50": round(ma50, 2), "MA100": round(ma100, 2),
                                "MA200": round(ma200, 2), "YESTERDAY_LOW": prev_day_low,
                                "YESTERDAY_HIGH": prev_day_high, "WEEK_LOW": week_low, "WEEK_HIGH": week_high,
-                               "MONTH_LOW": month_low, "MONTH_HIGH": month_high, "RSI": rsi, "MACD": macd, "MACDs": macds}
+                               "MONTH_LOW": month_low, "MONTH_HIGH": month_high, "RSI": rsi, "MACD": macd,
+                               "MACDs": macds}
                 print(f"{self.ticker} {self.levels}")
             elif timeframe == "HOUR":
                 self.levels["MA20_HOUR"], self.levels["MA50_HOUR"], *_ = get_ma(close_prices)
-                print("Hour MA successfully added")
             else:
                 raise AssertionError
         except Exception as e:
             logger.exception(f"Exception in update prices method: \n{e}\n")
-
 
 
 ozon = StockAnalyzer("BBG00Y91R9T3", "OZON")
@@ -93,4 +91,3 @@ moex = StockAnalyzer("BBG004730JJ5", "MOEX")
 
 stocks_list = [ozon, sber, sgzh, poly, vkco, tatn, nvtk, spbe, nlmk, pikk, five, afks, yndx, rosn, alrs, gmkn, aflt,
                gazp, lkoh, moex]
-               
