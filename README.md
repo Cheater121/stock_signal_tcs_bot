@@ -26,6 +26,7 @@ Tracked Indicators:
 ### Prerequisites
 
 - Python 3.x
+- Postgresql
 - Tinkoff API token
 - Telegram Bot token
 

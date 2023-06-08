@@ -8,6 +8,7 @@ from strategies.macd import get_macd
 from strategies.moving_averages import get_ma
 from strategies.interval_levels import get_interval_levels
 from config_data.config import load_config
+from db.methods import database_connector
 
 config = load_config()
 
@@ -53,12 +54,20 @@ class StockAnalyzer:
                     minimal_values, maximum_values)
                 rsi = get_current_rsi(close_prices)
                 macd, macds = get_macd(close_prices)
-                self.levels = {"PRICE": close_price, "MA20": round(ma20, 2),
-                               "MA50": round(ma50, 2), "MA100": round(ma100, 2),
-                               "MA200": round(ma200, 2), "YESTERDAY_LOW": prev_day_low,
-                               "YESTERDAY_HIGH": prev_day_high, "WEEK_LOW": week_low, "WEEK_HIGH": week_high,
-                               "MONTH_LOW": month_low, "MONTH_HIGH": month_high, "RSI": rsi, "MACD": macd,
-                               "MACDs": macds}
+                self.levels["PRICE"] = close_price
+                self.levels["MA20"] = round(ma20, 2)
+                self.levels["MA50"] = round(ma50, 2)
+                self.levels["MA100"] = round(ma100, 2)
+                self.levels["MA200"] = round(ma200, 2)
+                self.levels["YESTERDAY_LOW"] = prev_day_low
+                self.levels["YESTERDAY_HIGH"] = prev_day_high
+                self.levels["WEEK_LOW"] = week_low
+                self.levels["WEEK_HIGH"] = week_high
+                self.levels["MONTH_LOW"] = month_low
+                self.levels["MONTH_HIGH"] = month_high
+                self.levels["RSI"] = rsi
+                self.levels["MACD"] = macd
+                self.levels["MACDs"] = macds
                 print(f"{self.ticker} {self.levels}")
             elif timeframe == "HOUR":
                 self.levels["MA20_HOUR"], self.levels["MA50_HOUR"], *_ = get_ma(close_prices)
@@ -66,6 +75,15 @@ class StockAnalyzer:
                 raise AssertionError
         except Exception as e:
             logger.exception(f"Exception in update prices method: \n{e}\n")
+
+    def save_old_prices(self):
+        database_connector.save_old_prices(ticker=self.ticker, figi=self.figi, old_levels=self.old_levels)
+
+    def load_old_prices(self):
+        old_prices_from_db = database_connector.load_old_prices(ticker=self.ticker, figi=self.figi)
+        if old_prices_from_db:
+            for indicator in self.old_levels:
+                self.old_levels[indicator] = old_prices_from_db[indicator]
 
 
 ozon = StockAnalyzer("BBG00Y91R9T3", "OZON")

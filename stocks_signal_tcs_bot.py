@@ -1,7 +1,6 @@
 """ToDo:
 - add the ability to search for an instrument by ticker
 - add the ability to edit (add/remove) the list of tracked instruments
-- add work with database / redis
 """
 
 import telebot
@@ -35,14 +34,17 @@ def start_handler(message):
             if time_checker():
                 for stock in stocks_list:
                     sleep(1)  # Delay for Tinkoff API
-                    #stock.load_old_prices()  # load from database
+                    stock.load_old_prices()  # load from database
+
+                    # Run all strategies
                     stock.get_new_prices(interval=CandleInterval.CANDLE_INTERVAL_HOUR, days=100)
                     sma_hour_notification(stock, bot)
                     stock.get_new_prices()
                     levels_with_notification(stock, bot)
-                    #stock.save_old_prices()  # save to database
                     rsi_notification(stock, bot)
                     macd_notification(stock, bot)
+
+                    stock.save_old_prices()  # save to database
             sleep(60)
     except Exception as e:
         logger.exception(f"Exception in start handler: \n{e}\n")
