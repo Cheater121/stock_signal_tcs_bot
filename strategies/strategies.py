@@ -38,7 +38,8 @@ def levels_with_notification(stock, bot):
                                      f"resistance <b>{target}</b> ({new.get(target)} руб.){attention} \U0001F7E2",
                                      parse_mode="HTML", reply_markup=bot.keyboard1)
                     sleep(4)
-        stock.old_levels = stock.levels
+        for indicator in priority_list:
+            stock.old_levels[indicator] = stock.levels.get(indicator)
     except Exception as e:
         logger.exception(f"Exception in sort levels method: \n{e}\n")
 
@@ -88,7 +89,7 @@ def rsi_notification(stock, bot):
                              f"time to buy!\U0001F7E2{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
             sleep(4)
-        stock.old_levels["RSI"] = stock.levels["RSI"]
+        stock.old_levels["RSI"] = stock.levels.get("RSI")
     except Exception as e:
         logger.exception(f"Exception in rsi method: \n{e}\n")
 
@@ -122,7 +123,7 @@ def macd_notification(stock, bot):
                              f"line MACDs!\U0001F534{attention}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
             sleep(4)
-        stock.old_levels["MACD"], stock.old_levels["MACDs"] = stock.levels["MACD"], stock.levels["MACDs"]
+        stock.old_levels["MACD"], stock.old_levels["MACDs"] = stock.levels.get("MACD"), stock.levels.get("MACDs")
     except Exception as e:
         logger.exception(f"Exception in rsi method: \n{e}\n")
  
@@ -156,7 +157,7 @@ def sma_hour_notification(stock, bot):
                              f"SMA50!\U0001F534{attention*3}",
                              parse_mode="HTML", reply_markup=bot.keyboard1)
             sleep(4)
-        stock.old_levels["MA20_HOUR"], stock.old_levels["MA50_HOUR"] = stock.levels["MA20_HOUR"], stock.levels["MA50_HOUR"]
+        stock.old_levels["MA20_HOUR"], stock.old_levels["MA50_HOUR"] = stock.levels.get("MA20_HOUR"), stock.levels.get("MA50_HOUR")
     except Exception as e:
         logger.exception(f"Exception in rsi method: \n{e}\n")
         
