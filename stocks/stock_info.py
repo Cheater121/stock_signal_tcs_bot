@@ -1,6 +1,8 @@
 from tinkoff.invest import CandleInterval, Client
 from tinkoff.invest.utils import now
+from tinkoff.invest.exceptions import RequestError
 from datetime import timedelta
+from time import sleep
 
 from errors.setup_logger import logger
 from strategies.rsi import get_current_rsi
@@ -43,6 +45,9 @@ class StockAnalyzer:
                         minimal_values.append(candle.low.units + candle.low.nano / (10 ** 9))
                         maximum_values.append(candle.high.units + candle.high.nano / (10 ** 9))
                 self._update_prices(close_price, close_prices, minimal_values, maximum_values, timeframe)
+        except RequestError as e:
+            logger.exception(f"Catch request error (RESOURCE EXHAUSTED): \n{e}\n")
+            sleep(15)
         except Exception as e:
             logger.exception(f"Exception in get prices method: \n{e}\n")
 
