@@ -3,6 +3,13 @@ from errors.setup_logger import logger
 from time import sleep
 
 
+def setup_keyboard(stock, bot):
+    bot.keyboard1 = types.InlineKeyboardMarkup()
+    url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}",
+                                         url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
+    bot.keyboard1.add(url_btn)
+
+
 def levels_with_notification(stock, bot):
     try:
         old = stock.old_levels
@@ -18,10 +25,7 @@ def levels_with_notification(stock, bot):
                 if name.startswith('MA') and target.startswith('MA'):
                     attention = '\U0000203C'
 
-                bot.keyboard1 = types.InlineKeyboardMarkup()
-                url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}",
-                                                     url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
-                bot.keyboard1.add(url_btn)
+                setup_keyboard(stock, bot)
                 # sell
                 if old.get(name) > old.get(target) and new.get(name) < new.get(target):
                     print(f'{name} ({new.get(name)} rub.) down {target} ({new.get(target)} rub.)')
@@ -46,10 +50,7 @@ def levels_with_notification(stock, bot):
 
 def rsi_notification(stock, bot):
     try:
-        bot.keyboard1 = types.InlineKeyboardMarkup()
-        url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}",
-                                             url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
-        bot.keyboard1.add(url_btn)
+        setup_keyboard(stock, bot)
         
         old_rsi = stock.old_levels.get("RSI")
         current_rsi = stock.levels.get("RSI")
@@ -96,10 +97,7 @@ def rsi_notification(stock, bot):
 
 def macd_notification(stock, bot):
     try:
-        bot.keyboard1 = types.InlineKeyboardMarkup()
-        url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}",
-                                             url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
-        bot.keyboard1.add(url_btn)
+        setup_keyboard(stock, bot)
         
         old_macd = stock.old_levels.get("MACD")
         macd = stock.levels.get("MACD")
@@ -130,10 +128,7 @@ def macd_notification(stock, bot):
                
 def sma_hour_notification(stock, bot):
     try:
-        bot.keyboard1 = types.InlineKeyboardMarkup()
-        url_btn = types.InlineKeyboardButton(text=f"{stock.ticker}",
-                                             url=f"https://www.tinkoff.ru/invest/stocks/{stock.ticker}")
-        bot.keyboard1.add(url_btn)
+        setup_keyboard(stock, bot)
         
         old_ma20_hour = stock.old_levels.get("MA20_HOUR")
         ma20_hour = stock.levels.get("MA20_HOUR")
