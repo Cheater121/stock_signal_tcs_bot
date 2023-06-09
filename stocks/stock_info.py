@@ -83,7 +83,7 @@ class StockAnalyzer:
         old_prices_from_db = database_connector.load_old_prices(ticker=self.ticker, figi=self.figi)
         if old_prices_from_db:
             for indicator in self.old_levels:
-                self.old_levels[indicator] = old_prices_from_db[indicator]
+                self.old_levels[indicator] = old_prices_from_db.get(indicator)
 
 
 ozon = StockAnalyzer("BBG00Y91R9T3", "OZON")
@@ -109,3 +109,4 @@ moex = StockAnalyzer("BBG004730JJ5", "MOEX")
 
 stocks_list = [ozon, sber, sgzh, poly, vkco, tatn, nvtk, spbe, nlmk, pikk, five, afks, yndx, rosn, alrs, gmkn, aflt,
                gazp, lkoh, moex]
+               
