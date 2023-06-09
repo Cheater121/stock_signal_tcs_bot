@@ -68,7 +68,7 @@ class StockAnalyzer:
                 self.levels["RSI"] = rsi
                 self.levels["MACD"] = macd
                 self.levels["MACDs"] = macds
-                print(f"{self.ticker} {self.levels}")
+                print(f"{self.ticker} New: {self.levels} \n Old: {self.old_levels}")
             elif timeframe == "HOUR":
                 self.levels["MA20_HOUR"], self.levels["MA50_HOUR"], *_ = get_ma(close_prices)
             else:
