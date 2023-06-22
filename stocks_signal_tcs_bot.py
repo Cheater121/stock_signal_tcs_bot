@@ -92,8 +92,9 @@ def help_handler(message):
 
 
 if __name__ == "__main__":
-    print("start")
-    bot.add_custom_filter(custom_filters.IsAdminFilter(bot))
-    bot.polling()
-    print("finished")
-    
+    while True:
+        try:
+            bot.add_custom_filter(custom_filters.IsAdminFilter(bot))
+            bot.polling()
+        except Exception as e:
+            logger.exception(f"Exception in main cycle: \n{e}\n")
