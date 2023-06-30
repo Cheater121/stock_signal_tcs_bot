@@ -74,9 +74,11 @@ def status_checker(message):
 @bot.message_handler(commands=['stocks'])
 def stock_handler(message):
     try:
-        bot.send_message(message.chat.id,
-                         "OZON, SBER, SGZH, POLY, VKCO, TATN, NVTK, SPBE, NLMK, PIKK, FIVE, AFKS, YNDX, ROSN, ALRS, "
-                         "GMKN, AFLT, GAZP, LKOH, MOEX")
+        tickers = []
+        for stock in stocks_list:
+            tickers.append(stock.ticker)
+        answer = ", ".join(tickers)
+        bot.send_message(message.chat.id, answer)
     except Exception as e:
         logger.exception(f"Exception in stock handler: \n{e}\n")
 
